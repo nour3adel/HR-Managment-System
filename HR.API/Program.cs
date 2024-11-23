@@ -12,7 +12,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<HRdbContext>(option =>
 {
-    option.UseSqlServer(builder.Configuration.GetConnectionString("HR_CON"));
+    option.UseLazyLoadingProxies().UseSqlServer(builder.Configuration.GetConnectionString("HR_CON"));
 });
 
 var app = builder.Build();
