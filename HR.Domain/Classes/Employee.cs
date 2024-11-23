@@ -8,7 +8,8 @@ namespace HR.Domain.Classes
 
     public class Employee : IdentityUser
     {
-
+        [MaxLength(250)]
+        public string FullName { get; set; }
         [Column(TypeName = "Money")]
         public decimal Salary { get; set; }
 
