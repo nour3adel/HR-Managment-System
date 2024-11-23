@@ -14,7 +14,6 @@ namespace HR.Domain.Classes
         [Required]
         public string EmployeeId { get; set; }
 
-
         [MaxLength(500)]
         public string? MessageContent { get; set; }
 

@@ -20,11 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Common\" />
     <Folder Include="Configurations\" />
-    <Folder Include="Interfaces\" />
-    <Folder Include="Seeders\" />
-    <Folder Include="Repositories\" />
   </ItemGroup>
 
 </Project>
