@@ -10,6 +10,7 @@ namespace HR.Services
         public static IServiceCollection AddServicesDependencies(this IServiceCollection services)
         {
             services.AddScoped<IEmployeeServices, EmployeeServices>();
+            services.AddScoped<IAttendanceServices, AttendanceService>();
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             return services;
