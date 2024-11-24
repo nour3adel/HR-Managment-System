@@ -1,4 +1,3 @@
-using HR.Domain.Classes;
 using HR.Domain.Classes.Identity;
 using HR.Infrastructure;
 using HR.Infrastructure.Context;
@@ -16,47 +15,51 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//Connection To SQL Server
 builder.Services.AddDbContext<HRdbContext>(option =>
 {
-    option.UseSqlServer(builder.Configuration.GetConnectionString("HR_CON"));
+    option.UseLazyLoadingProxies().UseSqlServer(builder.Configuration.GetConnectionString("HR_CON"));
 });
 
+#region Dependency injections
+
 builder.Services.AddInfrastructureDependencies()
-                .AddServicesDependencies();
-builder.Services.AddIdentity<Employee, Role>(option =>
-{
-    // Password settings.
-    option.Password.RequireDigit = true;
-    option.Password.RequireLowercase = false;
-    option.Password.RequireNonAlphanumeric = false;
-    option.Password.RequireUppercase = false;
-    option.Password.RequiredLength = 6;
-    option.Password.RequiredUniqueChars = 1;
+                .AddServicesDependencies()
+                .AddServiceRegisteration(builder.Configuration);
 
-    // Lockout settings.
-    option.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-    option.Lockout.MaxFailedAccessAttempts = 5;
-    option.Lockout.AllowedForNewUsers = true;
-
-    // User settings.
-    option.User.AllowedUserNameCharacters =
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
-    option.User.RequireUniqueEmail = true;
-    //option.SignIn.RequireConfirmedEmail = true;
-
-}).AddEntityFrameworkStores<HRdbContext>().AddDefaultTokenProviders();
+#endregion
 
 var app = builder.Build();
+
+#region Seeder
+
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
     await RoleSeeder.Seed(roleManager);
 }
+
+#endregion
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/All/swagger.json", "All");
+        options.SwaggerEndpoint("/swagger/Employees/swagger.json", "Employees");
+        options.SwaggerEndpoint("/swagger/Departments/swagger.json", "Departments");
+        options.SwaggerEndpoint("/swagger/Attendances/swagger.json", "Attendances");
+        options.SwaggerEndpoint("/swagger/LeaveRequests/swagger.json", "LeaveRequests");
+        options.SwaggerEndpoint("/swagger/Notifications/swagger.json", "Notifications");
+        options.SwaggerEndpoint("/swagger/Payroll/swagger.json", "Payroll");
+        options.SwaggerEndpoint("/swagger/PerformanceReview/swagger.json", "PerformanceReview");
+        options.RoutePrefix = "swagger";
+        options.DisplayRequestDuration();
+        options.DefaultModelsExpandDepth(-1);
+    });
 }
 
 app.UseHttpsRedirection();
