@@ -21,7 +21,7 @@ namespace HR.API.Controllers
         #region Register New User
 
         [SwaggerOperation(Summary = "Register New User", OperationId = "RegisterUser")]
-        [HttpPost]
+        [HttpPost("Register")]
 
         public async Task<IActionResult> RegisterUser([FromBody] RegisterUserDTO registerUserDTO)
         {

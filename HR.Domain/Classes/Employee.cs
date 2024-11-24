@@ -20,6 +20,9 @@ namespace HR.Domain.Classes
         [MaxLength(250)]
         public string? Address { get; set; }
 
+        [MaxLength(250)]
+        public string? Position { get; set; }
+
         public virtual Department? Department { get; set; }
 
     }
