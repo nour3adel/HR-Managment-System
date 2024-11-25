@@ -1,14 +1,15 @@
 ﻿using HR.Domain.DTOs.Attendance;
+using HR.Services.Bases;
 
 namespace HR.Services.Services
 {
     public interface IAttendanceServices
     {
-        public Task<string> ClockIn(ClockInDTO clockInDTO);
-        public Task<string> ClockOut(ClockOutDTO clockoutDTO);
-        public Task<IEnumerable<AttendanceRecordDTO>> GetAttendanceById(string EmployeeID);
-        public Task<IEnumerable<AttendanceRecordDTO>> GetDailyAttendanceAsync(DateOnly date);
-        public Task<string> updateAttendanceAsync(UpdateAttendanceDTO record);
-        public Task<string> DeleteAttendanceAsync(string EmployeeID);
+        public Task<Response<string>> ClockIn(ClockInDTO clockInDTO);
+        public Task<Response<string>> ClockOut(ClockOutDTO clockoutDTO);
+        public Task<Response<IEnumerable<AttendanceRecordDTO>>> GetAttendanceById(string EmployeeID);
+        public Task<Response<IEnumerable<AttendanceRecordDTO>>> GetDailyAttendanceAsync(DateOnly date);
+        public Task<Response<string>> updateAttendanceAsync(UpdateAttendanceDTO record);
+        public Task<Response<string>> DeleteAttendanceAsync(string EmployeeID);
     }
 }

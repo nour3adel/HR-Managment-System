@@ -1,6 +1,6 @@
 ﻿using HR.Domain.Classes;
 using HR.Domain.DTOs.Attendance;
-using HR.Domain.Enums;
+using HR.Domain.Helpers;
 using HR.Infrastructure.Common;
 using HR.Infrastructure.Context;
 using HR.Infrastructure.Interfaces;
@@ -37,7 +37,7 @@ namespace HR.Infrastructure.Repositories
                 Date = a.Date,
                 ClockInTime = a.ClockInTime,
                 ClockOutTime = a.ClockOutTime,
-                Status = MapAttendanceStatus(a.Status)
+                Status = EnumString.MapAttendanceStatus(a.Status)
             }).ToList();
 
             return result;
@@ -57,7 +57,7 @@ namespace HR.Infrastructure.Repositories
                 Date = a.Date,
                 ClockInTime = a.ClockInTime,
                 ClockOutTime = a.ClockOutTime,
-                Status = MapAttendanceStatus(a.Status)
+                Status = EnumString.MapAttendanceStatus(a.Status)
             }).ToList();
 
             return result;
@@ -69,22 +69,7 @@ namespace HR.Infrastructure.Repositories
         }
 
 
-        public static string MapAttendanceStatus(AttendanceStatus? status)
-        {
-            switch (status)
-            {
-                case AttendanceStatus.Present:
-                    return "Present";
-                case AttendanceStatus.Absent:
-                    return "Absent";
-                case AttendanceStatus.Late:
-                    return "Late";
-                case AttendanceStatus.OnLeave:
-                    return "OnLeave";
-                default:
-                    return "Unknown";
-            }
-        }
+
 
 
     }

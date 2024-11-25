@@ -176,27 +176,7 @@ namespace HR.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "LeaveRequests",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false),
-                    StartDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    EndDate = table.Column<DateOnly>(type: "date", nullable: true),
-                    EmployeeId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    Status = table.Column<int>(type: "int", maxLength: 20, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_LeaveRequests", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_LeaveRequests_AspNetUsers_EmployeeId",
-                        column: x => x.EmployeeId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+
 
             migrationBuilder.CreateTable(
                 name: "Notifications",
@@ -307,10 +287,7 @@ namespace HR.Infrastructure.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
 
-            migrationBuilder.CreateIndex(
-                name: "IX_LeaveRequests_EmployeeId",
-                table: "LeaveRequests",
-                column: "EmployeeId");
+
 
             migrationBuilder.CreateIndex(
                 name: "IX_Notifications_EmployeeId",
@@ -346,8 +323,7 @@ namespace HR.Infrastructure.Migrations
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
 
-            migrationBuilder.DropTable(
-                name: "LeaveRequests");
+
 
             migrationBuilder.DropTable(
                 name: "Notifications");

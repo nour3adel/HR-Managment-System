@@ -8,7 +8,7 @@ namespace HR.Domain.Classes
     public class LeaveRequest
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [Required]
@@ -23,7 +23,7 @@ namespace HR.Domain.Classes
         public string? Description { get; set; }
 
         [Required]
-        [MaxLength(20)]
+        [MaxLength(100)]
         public LeaveRequestStatus Status { get; set; }
 
         [ForeignKey(nameof(EmployeeId))]
