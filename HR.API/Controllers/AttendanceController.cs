@@ -1,4 +1,5 @@
-﻿using HR.Domain.DTOs.Attendance;
+﻿using HR.API.Base;
+using HR.Domain.DTOs.Attendance;
 using HR.Services.Services;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -9,7 +10,7 @@ namespace HR.API.Controllers
     [ApiController]
     [ApiExplorerSettings(GroupName = "Attendances")]
 
-    public class AttendanceController : ControllerBase
+    public class AttendanceController : AppControllerBase
     {
         private readonly IAttendanceServices _attendanceservices;
         public AttendanceController(IAttendanceServices attendanceservices)
@@ -26,8 +27,8 @@ namespace HR.API.Controllers
         {
             if (ModelState.IsValid)
             {
-                string result = await _attendanceservices.ClockIn(clockInDTO);
-                return Ok(result);
+                var result = await _attendanceservices.ClockIn(clockInDTO);
+                return NewResult(result);
             }
             else
             {
@@ -45,8 +46,8 @@ namespace HR.API.Controllers
         {
             if (ModelState.IsValid)
             {
-                string result = await _attendanceservices.ClockOut(clockoutDTO);
-                return Ok(result);
+                var result = await _attendanceservices.ClockOut(clockoutDTO);
+                return NewResult(result);
             }
             else
             {
@@ -63,7 +64,7 @@ namespace HR.API.Controllers
         public async Task<IActionResult> GetAttendanceByEmployee(string employeeId)
         {
             var attendanceRecords = await _attendanceservices.GetAttendanceById(employeeId);
-            return Ok(attendanceRecords);
+            return NewResult(attendanceRecords);
         }
         #endregion
 
@@ -75,12 +76,14 @@ namespace HR.API.Controllers
         public async Task<IActionResult> GetDailyAttendance([FromQuery] DateOnly date)
         {
             var dailyAttendance = await _attendanceservices.GetDailyAttendanceAsync(date);
-            return Ok(dailyAttendance);
+            return NewResult(dailyAttendance);
         }
 
         #endregion
 
         #region Update Attendance (Manager Only)
+
+        // TODO :: Add Authorize  Update Attendance 
         [HttpPut("update")]
         [SwaggerOperation(Summary = "Update Attendance (Role : Manager)", OperationId = "updateattendance")]
 
@@ -90,7 +93,7 @@ namespace HR.API.Controllers
             {
 
                 var dailyAttendance = await _attendanceservices.updateAttendanceAsync(attendance);
-                return Ok(dailyAttendance);
+                return NewResult(dailyAttendance);
             }
             else
             { return BadRequest(ModelState); }
@@ -99,6 +102,7 @@ namespace HR.API.Controllers
         #endregion
 
         #region Delete Attendance (Manager Only)
+        // TODO :: Add Authorize Delete Attendance
         [HttpDelete("Delete")]
         [SwaggerOperation(Summary = "Delete Attendance (Role : Manager)", OperationId = "Deleteattendance")]
 
@@ -108,7 +112,7 @@ namespace HR.API.Controllers
             {
 
                 var dailyAttendance = await _attendanceservices.DeleteAttendanceAsync(EmployeeID);
-                return Ok(dailyAttendance);
+                return NewResult(dailyAttendance);
             }
             else
             { return BadRequest(ModelState); }

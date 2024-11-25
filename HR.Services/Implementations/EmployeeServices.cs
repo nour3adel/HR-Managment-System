@@ -8,13 +8,20 @@ namespace HR.Services.Implementations
 {
     public class EmployeeServices : IEmployeeServices
     {
+        #region Fields
+
         public UserManager<Employee> _userManager;
         private readonly IMapper _mapper;
+
+        #endregion
+
+        #region Constructor
         public EmployeeServices(UserManager<Employee> userManager, IMapper mapper)
         {
             _userManager = userManager;
             _mapper = mapper;
         }
+        #endregion
 
         #region Register User
         public async Task<string> RegisterUser(RegisterUserDTO user)
