@@ -1,11 +1,14 @@
 ﻿using HR.Domain.DTOs.Employee;
 using HR.Services.Services;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace HR.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [ApiExplorerSettings(GroupName = "Employees")]
+
     public class EmployeeController : ControllerBase
     {
         private readonly IEmployeeServices employeeServices;
@@ -15,8 +18,12 @@ namespace HR.API.Controllers
             this.employeeServices = employeeServices;
 
         }
-        [HttpPost]
-        public async Task<IActionResult> RegisterUser(RegisterUserDTO registerUserDTO)
+        #region Register New User
+
+        [SwaggerOperation(Summary = "Register New User", OperationId = "RegisterUser")]
+        [HttpPost("Register")]
+
+        public async Task<IActionResult> RegisterUser([FromBody] RegisterUserDTO registerUserDTO)
         {
             if (ModelState.IsValid)
             {
@@ -29,6 +36,7 @@ namespace HR.API.Controllers
                 return BadRequest(ModelState);
             }
         }
+        #endregion
 
     }
 }

@@ -2,16 +2,16 @@ using HR.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-
 namespace HR.Domain.Classes
 {
     public class Attendance
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [Required]
+        [ForeignKey(nameof(Employee))]
         public string EmployeeId { get; set; }
 
         [Required]

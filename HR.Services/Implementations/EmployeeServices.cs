@@ -15,29 +15,46 @@ namespace HR.Services.Implementations
             _userManager = userManager;
             _mapper = mapper;
         }
+
+        #region Register User
         public async Task<string> RegisterUser(RegisterUserDTO user)
         {
-            //check if email is exist
-            Employee existemail = await _userManager.FindByEmailAsync(user.Email);
-            if (existemail != null) return "Email Exist";
-            //check if username is exist
-            Employee existusername = await _userManager.FindByNameAsync(user.UserName);
-            if (existusername != null) return "Username Exist";
-
-
-            Employee employee = _mapper.Map<Employee>(user);
-
-            //create user
-            IdentityResult createdUser = await _userManager.CreateAsync(employee, user.password);
-            if (!createdUser.Succeeded)
+            // Validate email
+            if (await _userManager.FindByEmailAsync(user.Email) != null)
             {
-                return "Creation Failed";
+                return "Email is already registered.";
+            }
+
+            // Validate username
+            if (await _userManager.FindByNameAsync(user.UserName) != null)
+            {
+                return "Username is already taken.";
+            }
+
+            // Map DTO to Employee entity
+            Employee newEmployee = _mapper.Map<Employee>(user);
+
+            // Create the user
+            IdentityResult creationResult = await _userManager.CreateAsync(newEmployee, user.password);
+            if (!creationResult.Succeeded)
+            {
+                var errors = string.Join(", ", creationResult.Errors.Select(e => e.Description));
+                return $"User creation failed: {errors}";
             }
             //add role
             await _userManager.AddToRoleAsync(employee, "User");
 
-            return "Success";
+            // Assign role to the user
+            var roleResult = await _userManager.AddToRoleAsync(newEmployee, "User");
+            if (!roleResult.Succeeded)
+            {
+                var errors = string.Join(", ", roleResult.Errors.Select(e => e.Description));
+                return $"Failed to assign role: {errors}";
+            }
 
+            return "User registration successful.";
         }
+
+        #endregion
     }
 }

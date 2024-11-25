@@ -16,7 +16,7 @@ namespace HR.Infrastructure.Common
         #region Constructor(s)
         public GenericRepository(HRdbContext dbContext)
         {
-
+            _dbContext = dbContext;
         }
 
         #endregion
