@@ -11,6 +11,7 @@ namespace HR.Services
         {
             services.AddScoped<IEmployeeServices, EmployeeServices>();
             services.AddScoped<IAttendanceServices, AttendanceService>();
+            services.AddScoped<IPayrollServices, PayrollServices>();
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             return services;

@@ -46,14 +46,8 @@ namespace HR.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<TimeOnly>("ScheduledClockInTime")
-                        .HasColumnType("time");
-
                     b.Property<int?>("Status")
                         .HasMaxLength(20)
-                        .HasColumnType("int");
-
-                    b.Property<int>("WorkingHours")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -262,9 +256,6 @@ namespace HR.Infrastructure.Migrations
                     b.Property<string>("EmployeeId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<decimal>("FinalSalary")
-                        .HasColumnType("Money");
 
                     b.Property<int>("Month")
                         .HasColumnType("int");

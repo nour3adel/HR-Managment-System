@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HR.Infrastructure.Migrations
 {
     [DbContext(typeof(HRdbContext))]
-    [Migration("20241124130503_AddAttendanceTable")]
-    partial class AddAttendanceTable
+    [Migration("20241125141003_remove_finalsalary_from_payroll_model")]
+    partial class remove_finalsalary_from_payroll_model
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -259,9 +259,6 @@ namespace HR.Infrastructure.Migrations
                     b.Property<string>("EmployeeId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<decimal>("FinalSalary")
-                        .HasColumnType("Money");
 
                     b.Property<int>("Month")
                         .HasColumnType("int");

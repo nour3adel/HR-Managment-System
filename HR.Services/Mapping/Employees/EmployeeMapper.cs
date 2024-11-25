@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HR.Domain.Classes;
 using HR.Domain.DTOs.Employee;
+using HR.Domain.DTOs.Payroll;
 
 namespace HR.Services.Mapping.Employees
 {
@@ -13,7 +14,6 @@ namespace HR.Services.Mapping.Employees
         public void AddUserMapping()
         {
             CreateMap<RegisterUserDTO, Employee>();
-
         }
     }
 }

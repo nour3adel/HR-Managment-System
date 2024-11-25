@@ -41,9 +41,6 @@ namespace HR.Services.Implementations
                 var errors = string.Join(", ", creationResult.Errors.Select(e => e.Description));
                 return $"User creation failed: {errors}";
             }
-            //add role
-            await _userManager.AddToRoleAsync(employee, "User");
-
             // Assign role to the user
             var roleResult = await _userManager.AddToRoleAsync(newEmployee, "User");
             if (!roleResult.Succeeded)
