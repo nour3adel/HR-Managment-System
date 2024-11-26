@@ -13,5 +13,6 @@ namespace HR.Services.Services
         public Task<string> DeletePayrollforemployee(string Employeeid);
         public Task<string> AddPayrollforEmployee(AddPayrollDTO payroll);
         public Task<string> UpdatePayrollforEmployee(EditPayrollDTO editpayroll);
+        public Task<decimal> CalculatePayroll(PayrollDateDTO payrollDate);
     }
 }

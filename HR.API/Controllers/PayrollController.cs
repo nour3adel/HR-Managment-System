@@ -47,6 +47,12 @@ namespace HR.API.Controllers
             }
             return BadRequest(ModelState);
         }
+        [HttpPost("Calculate")]
+        public async Task<IActionResult> Calculate(PayrollDateDTO dto)
+        {
+            var result = await _payrollservices.CalculatePayroll(dto);
+            return Ok("Totla Payroll is " + result +" LE");
+        }
         [HttpPut("{id}")]
         public async Task<IActionResult> Edit(int id, EditPayrollDTO editPayrollDTO)
         {

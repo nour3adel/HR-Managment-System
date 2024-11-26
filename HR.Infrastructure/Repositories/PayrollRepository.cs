@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace HR.Infrastructure.Repositories
 {
-    public class PayrollRepository : GenericRepository<Attendance>, IPayrollRepository
+    public class PayrollRepository : GenericRepository<Payroll>, IPayrollRepository
     {
         private DbSet<Payroll> Payrolls;
         public PayrollRepository(HRdbContext dbContext) : base(dbContext)
@@ -37,7 +37,7 @@ namespace HR.Infrastructure.Repositories
         {
             foreach (var entity in entities)
             {
-                _dbContext.Entry(entity).State = EntityState.Deleted;
+                Payrolls.Entry(entity).State = EntityState.Deleted;
             }
             await _dbContext.SaveChangesAsync();
         }
@@ -64,7 +64,7 @@ namespace HR.Infrastructure.Repositories
 
         public async Task<Payroll> AddAsync(Payroll entity)
         {
-            await _dbContext.AddAsync(entity);
+            await Payrolls.AddAsync(entity);
             await _dbContext.SaveChangesAsync();
             return entity;
         }
@@ -76,7 +76,7 @@ namespace HR.Infrastructure.Repositories
 
         public async Task UpdateAsync(Payroll entity)
         {
-            _dbContext.Update(entity);
+            Payrolls.Update(entity);
             await _dbContext.SaveChangesAsync();
         }
 
