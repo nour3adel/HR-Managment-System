@@ -10,6 +10,7 @@ namespace HR.Services.Services
     public interface IPayrollServices
     {
         public Task<Response<IEnumerable<PayrollDTO>>> GetPayrollbyEmployeeid(string Employeeid);
+        public Task<Response<IEnumerable<PayrollDTO>>> GetPayrollbyDateforEmployee(string Employeeid, int month, int year);
         public Task<Response<IEnumerable<PayrollDTO>>> GetPayrollbyDate(int month, int year);
         public Task<Response<string>> DeletePayrollforemployee(string Employeeid);
         public Task<Response<string>> AddPayrollforEmployee(AddPayrollDTO payroll);

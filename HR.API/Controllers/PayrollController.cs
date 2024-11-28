@@ -29,6 +29,12 @@ namespace HR.API.Controllers
             var result = await _payrollservices.GetPayrollbyDate(month, year);
             return NewResult(result);
         }
+        [HttpGet("{Employeeid}/{month}/{year}")]
+        public async Task<IActionResult> Getbydateforemployee(string Employeeid, int month, int year)
+        {
+            var result = await _payrollservices.GetPayrollbyDateforEmployee(Employeeid, month, year);
+            return NewResult(result);
+        }
         [HttpPost]
         public async Task<IActionResult> Add(AddPayrollDTO dto)
         {

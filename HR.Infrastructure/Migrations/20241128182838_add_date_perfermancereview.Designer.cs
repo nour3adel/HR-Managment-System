@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HR.Infrastructure.Migrations
 {
     [DbContext(typeof(HRdbContext))]
-    [Migration("20241124140713_AddScheduleClockInTime")]
-    partial class AddScheduleClockInTime
+    [Migration("20241128182838_add_date_perfermancereview")]
+    partial class add_date_perfermancereview
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -49,14 +49,8 @@ namespace HR.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<TimeOnly>("ScheduledClockInTime")
-                        .HasColumnType("time");
-
                     b.Property<int?>("Status")
                         .HasMaxLength(20)
-                        .HasColumnType("int");
-
-                    b.Property<int>("WorkingHours")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -197,7 +191,10 @@ namespace HR.Infrastructure.Migrations
             modelBuilder.Entity("HR.Domain.Classes.LeaveRequest", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
                         .HasMaxLength(500)
@@ -214,7 +211,7 @@ namespace HR.Infrastructure.Migrations
                         .HasColumnType("date");
 
                     b.Property<int>("Status")
-                        .HasMaxLength(20)
+                        .HasMaxLength(100)
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -266,9 +263,6 @@ namespace HR.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<decimal>("FinalSalary")
-                        .HasColumnType("Money");
-
                     b.Property<int>("Month")
                         .HasColumnType("int");
 
@@ -286,6 +280,9 @@ namespace HR.Infrastructure.Migrations
                 {
                     b.Property<int>("Id")
                         .HasColumnType("int");
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date");
 
                     b.Property<string>("EmployeeId")
                         .IsRequired()

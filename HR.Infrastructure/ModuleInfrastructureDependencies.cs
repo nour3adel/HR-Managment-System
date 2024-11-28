@@ -13,8 +13,8 @@ namespace HR.Infrastructure
             services.AddScoped<ILeaveRequestRepository, LeaveRequestRepository>();
             services.AddScoped<IAttendanceRepository, AttendanceRepostory>();
             services.AddScoped<IPayrollRepository, PayrollRepository>();
+            services.AddScoped<IPerformanceReviewRepository, PerformanceReviewRepository>();
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-
             return services;
         }
     }

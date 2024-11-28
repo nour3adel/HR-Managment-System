@@ -15,5 +15,6 @@ namespace HR.Infrastructure.Interfaces
     {
         public Task<IEnumerable<Payroll>> GetByEmployeeID(string employeeId);
         public Task<IEnumerable<Payroll>> GetByDate(int month, int year);
+        public Task<IEnumerable<Payroll>> GetByDateforEmployee(string Employeeid, int month, int year);
     }
 }

@@ -13,6 +13,7 @@ namespace HR.Services
             services.AddScoped<IAttendanceServices, AttendanceService>();
             services.AddScoped<IPayrollServices, PayrollServices>();
             services.AddScoped<ILeaveRequestServices, LeaveRequestServices>();
+            services.AddScoped<IPerformanceReviewServices, PerformanceReviewServices>();
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             return services;

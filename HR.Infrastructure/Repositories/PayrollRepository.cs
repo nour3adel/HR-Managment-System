@@ -30,7 +30,12 @@ namespace HR.Infrastructure.Repositories
 
         public async Task<IEnumerable<Payroll>> GetByDate(int month, int year)
         {
-            var PayrollRecords =  await Payrolls.Where(a => a.Month == month && a.Year == year).ToListAsync();
+            var PayrollRecords = await Payrolls.Where(a => a.Month == month && a.Year == year).ToListAsync();
+            return PayrollRecords;
+        }
+        public async Task<IEnumerable<Payroll>> GetByDateforEmployee(string Employeeid, int month, int year)
+        {
+            var PayrollRecords = await Payrolls.Where(a => a.EmployeeId == Employeeid && a.Month == month && a.Year == year).ToListAsync();
             return PayrollRecords;
         }
     }
