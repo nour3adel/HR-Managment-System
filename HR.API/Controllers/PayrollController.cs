@@ -1,4 +1,5 @@
-﻿using HR.Domain.Classes;
+﻿using HR.API.Base;
+using HR.Domain.Classes;
 using HR.Domain.DTOs.Payroll;
 using HR.Services.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,7 @@ namespace HR.API.Controllers
     [ApiController]
     [ApiExplorerSettings(GroupName = "Payroll")]
 
-    public class PayrollController : ControllerBase
+    public class PayrollController : AppControllerBase
     {
         private readonly IPayrollServices _payrollservices;
         public PayrollController(IPayrollServices _payrollservices)
@@ -20,22 +21,13 @@ namespace HR.API.Controllers
         public async Task<IActionResult> Getbyemplyeeid(string Employeeid)
         {
             var result = await _payrollservices.GetPayrollbyEmployeeid(Employeeid);
-            if (!result.Any())
-            {
-                return BadRequest($"There is No Payroll History for Embloyee with id: {Employeeid}");
-            }
-            return Ok(result);
+            return NewResult(result);
         }
         [HttpGet("{month}/{year}")]
         public async Task<IActionResult> Getbydate(int month, int year)
         {
             var result = await _payrollservices.GetPayrollbyDate(month, year);
-            var reslist = result.ToList();
-            if (reslist.Count == 0)
-            {
-                return BadRequest($"There is No Payroll History for month: {month} in year: {year}");
-            }
-            return Ok(result);
+            return NewResult(result);
         }
         [HttpPost]
         public async Task<IActionResult> Add(AddPayrollDTO dto)
@@ -43,7 +35,7 @@ namespace HR.API.Controllers
             if (ModelState.IsValid)
             {
                 var result = await _payrollservices.AddPayrollforEmployee(dto);
-                return Ok(result);
+                return NewResult(result);
             }
             return BadRequest(ModelState);
         }
@@ -51,7 +43,7 @@ namespace HR.API.Controllers
         public async Task<IActionResult> Calculate(PayrollDateDTO dto)
         {
             var result = await _payrollservices.CalculatePayroll(dto);
-            return Ok("Totla Payroll is " + result +" LE");
+            return NewResult(result);
         }
         [HttpPut("{id}")]
         public async Task<IActionResult> Edit(int id, EditPayrollDTO editPayrollDTO)
@@ -63,7 +55,7 @@ namespace HR.API.Controllers
             if (ModelState.IsValid)
             {
                 var result = await _payrollservices.UpdatePayrollforEmployee(editPayrollDTO);
-                return Ok(result);
+                return NewResult(result);
             }
             else
                 return BadRequest(ModelState);
@@ -72,7 +64,7 @@ namespace HR.API.Controllers
         public async Task<IActionResult> Delete(string Employeeid)
         {
             var result = await _payrollservices.DeletePayrollforemployee(Employeeid);
-            return Ok(result);
+            return NewResult(result);
         }
     }
 }

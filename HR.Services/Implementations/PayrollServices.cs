@@ -2,6 +2,7 @@
 using HR.Domain.Classes;
 using HR.Domain.DTOs.Payroll;
 using HR.Infrastructure.Interfaces;
+using HR.Services.Bases;
 using HR.Services.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -14,7 +15,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace HR.Services.Implementations
 {
-    public class PayrollServices : IPayrollServices
+    public class PayrollServices : ResponseHandler, IPayrollServices
     {
         private readonly UserManager<Employee> _userManager;
         private readonly IPayrollRepository payrollRepository;
@@ -25,9 +26,19 @@ namespace HR.Services.Implementations
             this.payrollRepository = payrollRepository;
             this.mapper = mapper;
         }
-        public async Task<IEnumerable<PayrollDTO>> GetPayrollbyEmployeeid(string Employeeid)
+        //TODO: Update Bonus - Deduction
+        public async Task<Response<IEnumerable<PayrollDTO>>> GetPayrollbyEmployeeid(string Employeeid)
         {
+            var user = await _userManager.FindByIdAsync(Employeeid);
+            if (user == null)
+            {
+                return NotFound<IEnumerable<PayrollDTO>>("Employee does not exist.");
+            }
             var payrolls = await payrollRepository.GetByEmployeeID(Employeeid);
+            if (!payrolls.Any())
+            {
+                return NotFound<IEnumerable<PayrollDTO>>($"There is No Payroll History for Embloyee with id: {Employeeid}");
+            }
             List<PayrollDTO> payrollDTOs = new List<PayrollDTO>();
             foreach (var payroll in payrolls)
             {
@@ -43,10 +54,15 @@ namespace HR.Services.Implementations
                 };
                 payrollDTOs.Add(payrollDTO);
             }
-            return payrollDTOs;
+            return Success<IEnumerable<PayrollDTO>>(payrollDTOs);
         }
-        public async Task<IEnumerable<PayrollDTO>> GetPayrollbyDate(int month, int year)
+        //TODO: Update Bonus - Deduction
+        public async Task<Response<IEnumerable<PayrollDTO>>> GetPayrollbyDate(int month, int year)
         {
+            if (month < 1 || month > 12)
+                return BadRequest<IEnumerable<PayrollDTO>>("Month is not valid, Please Enter Month in Range(1,12)");
+            if(year < 2020 || year > 2024)
+                return BadRequest<IEnumerable<PayrollDTO>>("Year is not valid, The payroll exist for Years in Range(2020,2024)");
             var payrolls = await payrollRepository.GetByDate(month, year);
             List<PayrollDTO> payrollDTOs = new List<PayrollDTO>();
             foreach (var payroll in payrolls)
@@ -63,36 +79,50 @@ namespace HR.Services.Implementations
                 };
                 payrollDTOs.Add(payrollDTO);
             }
-            return payrollDTOs;
+            if (payrollDTOs.Count == 0)
+            {
+                return BadRequest<IEnumerable<PayrollDTO>>($"There is No Payroll History for month: {month} in year: {year}");
+            }
+            return Success<IEnumerable<PayrollDTO>>(payrollDTOs);
         }
-        public async Task<string> AddPayrollforEmployee(AddPayrollDTO payroll)
+        public async Task<Response<string>> AddPayrollforEmployee(AddPayrollDTO payroll)
         {
-            if (payroll == null)
-                return "payroll is null";
+            var user = await _userManager.FindByIdAsync(payroll.EmployeeId);
+            if (user == null)
+            {
+                return NotFound<string>("Employee does not exist.");
+            }
+            var paroll = await payrollRepository.GetByIdAsync(payroll.Id);
+            if (payroll != null)
+            {
+                return BadRequest<string>("Payroll id exist, please Enter valid id");
+            }
             var proll = mapper.Map<Payroll>(payroll);
             await payrollRepository.AddAsync(proll);
             await payrollRepository.SaveChangesAsync();
-            return "Created Succesful";
+            return Created<string>("Created Succesful");
         }
-        public async Task<string> UpdatePayrollforEmployee(EditPayrollDTO editpayroll)
+        public async Task<Response<string>> UpdatePayrollforEmployee(EditPayrollDTO editpayroll)
         {
             var user = await _userManager.FindByIdAsync(editpayroll.EmployeeId);
             if (user == null)
             {
-                return "Employee does not exist.";
+                return NotFound<string>("Employee does not exist.");
             }
             var payrolls = await payrollRepository.GetByEmployeeID(editpayroll.EmployeeId);
             foreach (var payroll in payrolls)
             {
                 if (payroll.Month == editpayroll.Month && payroll.Year == editpayroll.Year)
-                    return "there is already payroll with this date";
+                    return BadRequest<string>("there is already payroll with this date");
             }
             var proll = mapper.Map<Payroll>(editpayroll);
             await payrollRepository.UpdateAsync(proll);
-            return "Payroll Edited";
+            return Updated<string>("Payroll Edited");
         }
-        public async Task<decimal> CalculatePayroll(PayrollDateDTO payrollDate)
+        public async Task<Response<string>> CalculatePayroll(PayrollDateDTO payrollDate)
         {
+            if (payrollDate.enddate < payrollDate.startdate)
+                return BadRequest<string>($"date is invalid, {payrollDate.enddate} < {payrollDate.startdate}");
             decimal result = 0;
             var month = payrollDate.startdate.Month;
             var year = payrollDate.startdate.Year;
@@ -111,16 +141,22 @@ namespace HR.Services.Implementations
                 else
                     month ++;
             }
-            return result;
+            if (result == 0) return Success<string>("There is No payroll records for this date");
+            return Success<string>($"Totla Payroll is {result} LE");
         }
-        public async Task<string> DeletePayrollforemployee(string Employeeid)
+        public async Task<Response<string>> DeletePayrollforemployee(string Employeeid)
         {
+            var user = await _userManager.FindByIdAsync(Employeeid);
+            if (user == null)
+            {
+                return NotFound<string>("Employee does not exist.");
+            }
             var payrolls = await payrollRepository.GetByEmployeeID(Employeeid);
-            if (payrolls == null || !payrolls.Any())
-                return $"There is no Payroll history for Emplyee with id: {Employeeid}";
+            if (!payrolls.Any())
+                return NotFound<string>($"There is no Payroll history for Emplyee with id: {Employeeid}");
             var respayrolls = payrolls.ToList();
             await payrollRepository.DeleteRangeAsync(respayrolls);
-            return $"Payroll history for Employee with id: {Employeeid} Deleted successfully";
+            return Deleted<string>($"Payroll history for Employee with id: {Employeeid} Deleted successfully");
         }
     }
 }
