@@ -1,25 +1,43 @@
-using HR.Domain.Classes.Identity;
 using HR.Infrastructure;
 using HR.Infrastructure.Context;
-using HR.Infrastructure.Seeders;
 using HR.Services;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//Connection To SQL Server
+#region Allow CORS
+builder.Services.AddControllers();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigins", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000", "http://yourclientdomain.com") // Add allowed origins
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials(); // Allow credentials if needed
+    });
+
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+#endregion
+
+
+#region SQL SERVER CONNECTION
 builder.Services.AddDbContext<HRdbContext>(option =>
 {
     option.UseLazyLoadingProxies().UseSqlServer(builder.Configuration.GetConnectionString("HR_CON"));
 });
+#endregion
 
 #region Dependency injections
 
@@ -29,21 +47,23 @@ builder.Services.AddInfrastructureDependencies()
 
 #endregion
 
+
 var app = builder.Build();
 
 #region Seeder
 
-using (var scope = app.Services.CreateScope())
-{
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
-    await RoleSeeder.Seed(roleManager);
-}
+//using (var scope = app.Services.CreateScope())
+//{
+//    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
+//    await RoleSeeder.Seed(roleManager);
+//}
 
 #endregion
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    #region Swagger
     app.UseSwagger();
 
     app.UseSwaggerUI(options =>
@@ -56,12 +76,17 @@ if (app.Environment.IsDevelopment())
         options.SwaggerEndpoint("/swagger/Notifications/swagger.json", "Notifications");
         options.SwaggerEndpoint("/swagger/Payroll/swagger.json", "Payroll");
         options.SwaggerEndpoint("/swagger/PerformanceReview/swagger.json", "PerformanceReview");
+        options.SwaggerEndpoint("/swagger/Autherization/swagger.json", "Autherization");
+        options.SwaggerEndpoint("/swagger/Authentication/swagger.json", "Authentication");
         options.RoutePrefix = "swagger";
         options.DisplayRequestDuration();
         options.DefaultModelsExpandDepth(-1);
     });
+    #endregion
 }
+app.UseCors("AllowAll");
 
+app.UseAuthentication();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
