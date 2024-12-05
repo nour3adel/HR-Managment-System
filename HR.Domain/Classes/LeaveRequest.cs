@@ -17,7 +17,7 @@ namespace HR.Domain.Classes
         public DateOnly? EndDate { get; set; }
 
         [Required]
-        public string EmployeeId { get; set; } // Changed from Guid to string
+        public string EmployeeId { get; set; }
 
         [MaxLength(500)]
         public string? Description { get; set; }

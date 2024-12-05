@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HR.Infrastructure.Migrations
 {
     [DbContext(typeof(HRdbContext))]
-    [Migration("20241123195248_v2")]
-    partial class v2
+    [Migration("20241125055728_UpdateLeaveRequest")]
+    partial class UpdateLeaveRequest
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,6 +21,9 @@ namespace HR.Infrastructure.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "8.0.11")
+                .HasAnnotation("Proxies:ChangeTracking", false)
+                .HasAnnotation("Proxies:CheckEquality", false)
+                .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -28,7 +31,10 @@ namespace HR.Infrastructure.Migrations
             modelBuilder.Entity("HR.Domain.Classes.Attendance", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<TimeOnly>("ClockInTime")
                         .HasColumnType("time");
@@ -123,6 +129,10 @@ namespace HR.Infrastructure.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Position")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
                     b.Property<decimal>("Salary")
                         .HasColumnType("Money");
 
@@ -181,7 +191,10 @@ namespace HR.Infrastructure.Migrations
             modelBuilder.Entity("HR.Domain.Classes.LeaveRequest", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
                         .HasMaxLength(500)
@@ -198,7 +211,7 @@ namespace HR.Infrastructure.Migrations
                         .HasColumnType("date");
 
                     b.Property<int>("Status")
-                        .HasMaxLength(20)
+                        .HasMaxLength(100)
                         .HasColumnType("int");
 
                     b.HasKey("Id");

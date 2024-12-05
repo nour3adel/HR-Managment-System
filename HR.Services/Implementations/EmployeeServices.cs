@@ -1,7 +1,7 @@
-﻿using AutoMapper;
-using HR.Domain.Classes;
+﻿using HR.Domain.Classes;
 using HR.Domain.Classes.Identity;
 using HR.Domain.DTOs.Employee;
+using HR.Domain.Helpers;
 using HR.Services.Bases;
 using HR.Services.Services;
 using Jose;
@@ -17,6 +17,9 @@ namespace HR.Services.Implementations
         private readonly RoleManager<Role> _roleManager;
         private readonly SignInManager<Employee> _signin;
         private readonly JwtSettings _jwtSettings;
+
+
+
         #endregion
 
         #region Constructor

@@ -8,6 +8,7 @@ namespace HR.Domain.DTOs.Employee
 {
     public class ChangePasswordDTO
     {
+
         public string employeeid { get; set; }
 
 

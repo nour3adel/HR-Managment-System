@@ -8,7 +8,7 @@ namespace HR.Domain.Classes
     public class Notification
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [Required]
@@ -23,6 +23,11 @@ namespace HR.Domain.Classes
         [Required]
         [MaxLength(20)]
         public NotificationType Type { get; set; }
+
+        [MaxLength(200)]
+        public string subject { get; set; }
+
+        public bool isUrgent { get; set; }
 
         // Navigation property
         [ForeignKey(nameof(EmployeeId))]

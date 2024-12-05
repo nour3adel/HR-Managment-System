@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace HR.Domain.DTOs.Employee
+﻿namespace HR.Domain.DTOs.Employee
 {
     public class RegisterUserDTO
     {

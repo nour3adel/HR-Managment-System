@@ -35,5 +35,22 @@ namespace HR.Domain.Helpers
                     return "Unknown";
             }
         }
+
+        public static string MapNotificationType(NotificationType? type)
+        {
+            switch (type)
+            {
+                case NotificationType.Payroll:
+                    return "Payroll";
+                case NotificationType.LeaveRequest:
+                    return "LeaveRequest";
+                case NotificationType.PerformanceReview:
+                    return "PerformanceReview";
+                case NotificationType.Attendance:
+                    return "Attendance";
+                default:
+                    return "Unknown";
+            }
+        }
     }
 }

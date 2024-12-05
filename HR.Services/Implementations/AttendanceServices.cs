@@ -113,7 +113,12 @@ namespace HR.Services.Implementations
         #region Get Attendance By ID Service
         public async Task<Response<IEnumerable<AttendanceRecordDTO>>> GetAttendanceById(string employeeId)
         {
+            // Check if the employee exists
+            var existUser = await _userManager.FindByIdAsync(employeeId);
+            if (existUser == null) return NotFound<IEnumerable<AttendanceRecordDTO>>("Employee does not exist.");
+
             var result = await _attendanceRepository.GetAttendanceByID(employeeId);
+
             return Success(result);
         }
 
@@ -127,6 +132,12 @@ namespace HR.Services.Implementations
 
             // Retrieve attendance records for the given date
             var attendanceRecords = await _attendanceRepository.GetDailyAttendance(date);
+
+            // Check if there are no attendance records for the given date
+            if (!attendanceRecords.Any())
+            {
+                return NotFound<IEnumerable<AttendanceRecordDTO>>("No attendance on that day.");
+            }
 
             // Combine the data, ensuring all employees are included
             var result = employees.Select(employee =>
