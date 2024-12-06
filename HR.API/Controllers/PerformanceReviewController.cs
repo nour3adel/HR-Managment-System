@@ -1,9 +1,11 @@
 ﻿using HR.API.Base;
+using HR.Domain.Classes;
 using HR.Domain.DTOs.Payroll;
 using HR.Domain.DTOs.PerformanceReview;
 using HR.Services.Implementations;
 using HR.Services.Services;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace HR.API.Controllers
 {
@@ -18,19 +20,31 @@ namespace HR.API.Controllers
         {
             this._performanceReviewServices = performanceReviewServices;
         }
+
         [HttpGet("{Employeeid}")]
+        [SwaggerOperation(Summary = "Get performance review details by Employee ID")]
+        [ProducesResponseType(typeof(PerformanceReview), 200)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> Getbyemplyeeid(string Employeeid)
         {
             var result = await _performanceReviewServices.GetPerformanceReviewbyEmployeeid(Employeeid);
             return NewResult(result);
         }
+
         [HttpGet("{Employeeid}/{date}")]
+        [SwaggerOperation(Summary = "Get performance review details by Employee ID and date")]
+        [ProducesResponseType(typeof(PerformanceReview), 200)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> Getbydateforemployee(string Employeeid, DateOnly date)
         {
             var result = await _performanceReviewServices.GetPerformanceReviewbyDateforEmployee(Employeeid, date);
             return NewResult(result);
         }
+
         [HttpPost]
+        [SwaggerOperation(Summary = "Add a new performance review for an employee")]
+        [ProducesResponseType(typeof(PerformanceReview), 201)]
+        [ProducesResponseType(400)]
         public async Task<IActionResult> Add(AddPerformanceReviewDTO dto)
         {
             if (ModelState.IsValid)
@@ -40,7 +54,12 @@ namespace HR.API.Controllers
             }
             return BadRequest(ModelState);
         }
+
         [HttpPut("Employeeid/{id}")]
+        [SwaggerOperation(Summary = "Edit performance review for an employee")]
+        [ProducesResponseType(typeof(PerformanceReview), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> Editforemployee(int id, EditPerformanceReviewDTO editPerformanceReview)
         {
             if (id != editPerformanceReview.Id)
@@ -55,7 +74,12 @@ namespace HR.API.Controllers
             else
                 return BadRequest(ModelState);
         }
+
         [HttpPut("{id}")]
+        [SwaggerOperation(Summary = "Edit performance review")]
+        [ProducesResponseType(typeof(PerformanceReview), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> Edit(int id, EditPerformanceReviewDTO editPerformanceReview)
         {
             if (id != editPerformanceReview.Id)
@@ -70,13 +94,21 @@ namespace HR.API.Controllers
             else
                 return BadRequest(ModelState);
         }
+
         [HttpDelete("Emplyoeeid/{Employeeid}")]
+        [SwaggerOperation(Summary = "Delete performance review for an employee")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> Deleteforemployee(string Employeeid)
         {
             var result = await _performanceReviewServices.DeletePerformanceReviewforemployee(Employeeid);
             return NewResult(result);
         }
+
         [HttpDelete("{id}")]
+        [SwaggerOperation(Summary = "Delete performance review")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _performanceReviewServices.DeletePerformance(id);

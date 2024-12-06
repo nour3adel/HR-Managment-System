@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HR.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -261,8 +261,7 @@ namespace HR.Infrastructure.Migrations
                     Month = table.Column<int>(type: "int", nullable: false),
                     Year = table.Column<int>(type: "int", nullable: false),
                     Bonus = table.Column<decimal>(type: "Money", nullable: false),
-                    Deduction = table.Column<decimal>(type: "Money", nullable: false),
-                    FinalSalary = table.Column<decimal>(type: "Money", nullable: false)
+                    Deduction = table.Column<decimal>(type: "Money", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -282,7 +281,8 @@ namespace HR.Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false),
                     Review = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     RatingScore = table.Column<int>(type: "int", nullable: false),
-                    EmployeeId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    EmployeeId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Date = table.Column<DateOnly>(type: "date", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -300,8 +300,8 @@ namespace HR.Infrastructure.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Discriminator", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "02e12fd6-ddd0-42fe-9734-047dabdec084", null, "Role", "Manager", "MANAGER" },
-                    { "9bdff529-aac9-425c-a14f-3ac1e1e155cb", null, "Role", "User", "USER" }
+                    { "2628b7eb-7042-4329-8ca9-00261bf6c337", null, "Role", "User", "USER" },
+                    { "f41be486-6102-43bf-a67a-b614d4895a0e", null, "Role", "Manager", "MANAGER" }
                 });
 
             migrationBuilder.CreateIndex(

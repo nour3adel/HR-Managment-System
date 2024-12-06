@@ -434,13 +434,13 @@ namespace HR.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "9bdff529-aac9-425c-a14f-3ac1e1e155cb",
+                            Id = "2628b7eb-7042-4329-8ca9-00261bf6c337",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "02e12fd6-ddd0-42fe-9734-047dabdec084",
+                            Id = "f41be486-6102-43bf-a67a-b614d4895a0e",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         });

@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HR.Domain.DTOs.Employee
+﻿namespace HR.Domain.DTOs.Employee
 {
-    public class JWTAuthResult
+    public class JwtAuthResult
     {
         public string AccessToken { get; set; }
+
     }
 }

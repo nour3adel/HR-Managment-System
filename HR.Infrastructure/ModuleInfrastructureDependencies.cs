@@ -14,6 +14,8 @@ namespace HR.Infrastructure
             services.AddScoped<IAttendanceRepository, AttendanceRepostory>();
             services.AddScoped<IPayrollRepository, PayrollRepository>();
             services.AddScoped<IPerformanceReviewRepository, PerformanceReviewRepository>();
+            services.AddScoped<INotificationRepository, NotificationRepository>();
+            services.AddScoped<IDepartmentRepository, DepartmentRepository>();
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             return services;
         }

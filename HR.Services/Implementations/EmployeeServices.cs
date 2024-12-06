@@ -1,11 +1,11 @@
 ﻿using HR.Domain.Classes;
 using HR.Domain.Classes.Identity;
 using HR.Domain.DTOs.Employee;
-using HR.Domain.Helpers;
 using HR.Services.Bases;
 using HR.Services.Services;
 using Jose;
 using Microsoft.AspNetCore.Identity;
+using JwtSettings = HR.Domain.Helpers.JwtSettings;
 
 namespace HR.Services.Implementations
 {
