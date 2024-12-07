@@ -33,10 +33,11 @@ namespace HR.Infrastructure.Repositories
             var PayrollRecords = await Payrolls.Where(a => a.Month == month && a.Year == year).ToListAsync();
             return PayrollRecords;
         }
-        public async Task<IEnumerable<Payroll>> GetByDateforEmployee(string Employeeid, int month, int year)
+        public async Task<Payroll> GetByDateforEmployee(string employeeId, int month, int year)
         {
-            var PayrollRecords = await Payrolls.Where(a => a.EmployeeId == Employeeid && a.Month == month && a.Year == year).ToListAsync();
-            return PayrollRecords;
+            var payrollRecord = await Payrolls
+                .FirstOrDefaultAsync(a => a.EmployeeId == employeeId && a.Month == month && a.Year == year);
+            return payrollRecord;
         }
     }
 }
