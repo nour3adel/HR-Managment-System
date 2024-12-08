@@ -54,32 +54,29 @@ namespace HR.Services.Implementations
             }
             return Success<IEnumerable<GetPerformanceReviewDTO>>(PerformanceReviewDTOs);
         }
-        public async Task<Response<IEnumerable<GetPerformanceReviewDTO>>> GetPerformanceReviewbyDateforEmployee(string Employeeid, DateOnly date)
+        public async Task<Response<GetPerformanceReviewDTO>> GetPerformanceReviewbyDateforEmployee(string Employeeid, DateOnly date)
         {
             var user = await _userManager.FindByIdAsync(Employeeid);
             if (user == null)
             {
-                return NotFound<IEnumerable<GetPerformanceReviewDTO>>("Employee does not exist.");
+                return NotFound<GetPerformanceReviewDTO>("Employee does not exist.");
             }
             var performances = await performanceReviewRepository.GetByDateforEmployee(Employeeid, date);
-            List<GetPerformanceReviewDTO> PerformanceReviewDTOs = new List<GetPerformanceReviewDTO>();
-            foreach (var performance in performances)
-            {
+
                 var PerformanceReviewDTO = new GetPerformanceReviewDTO()
                 {
-                    Id = performance.Id,
-                    Review = performance.Review,
-                    RatingScore = performance.RatingScore,
-                    EmployeeName = performance.Employee.FullName,
-                    date = performance.Date
+                    Id = performances.Id,
+                    Review = performances.Review,
+                    RatingScore = performances.RatingScore,
+                    EmployeeName = performances.Employee.FullName,
+                    date = performances.Date
                 };
-                PerformanceReviewDTOs.Add(PerformanceReviewDTO);
-            }
-            if (PerformanceReviewDTOs.Count == 0)
+            
+            if (performances == null)
             {
-                return BadRequest<IEnumerable<GetPerformanceReviewDTO>>($"There is No Payroll History for Employee with id: {Employeeid} for date: {date}");
+                return BadRequest<GetPerformanceReviewDTO>($"There is No Payroll History for Employee with id: {Employeeid} for date: {date}");
             }
-            return Success<IEnumerable<GetPerformanceReviewDTO>>(PerformanceReviewDTOs);
+            return Success<GetPerformanceReviewDTO>(PerformanceReviewDTO);
         }
         public async Task<Response<string>> AddPerformanceReviewforEmployee(AddPerformanceReviewDTO perfreview)
         {

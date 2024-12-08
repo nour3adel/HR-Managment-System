@@ -12,6 +12,7 @@ namespace HR.Services
             services.AddScoped<IEmployeeServices, EmployeeServices>();
             services.AddScoped<IAttendanceServices, AttendanceService>();
             services.AddScoped<IPayrollServices, PayrollServices>();
+            services.AddScoped<IPerformanceReviewServices, PerformanceReviewServices>();
             services.AddScoped<ILeaveRequestServices, LeaveRequestServices>();
             services.AddScoped<INotificationServices, NotificationServices>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();

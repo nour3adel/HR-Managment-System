@@ -31,7 +31,7 @@ namespace HR.API.Controllers
             return NewResult(result);
         }
 
-        [HttpGet("{Employeeid}/{date}")]
+        [HttpGet("{Employeeid}/Monthly")]
         [SwaggerOperation(Summary = "Get performance review details by Employee ID and date")]
         [ProducesResponseType(typeof(PerformanceReview), 200)]
         [ProducesResponseType(404)]
