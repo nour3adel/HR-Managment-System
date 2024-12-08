@@ -14,6 +14,7 @@ namespace HR.Domain.DTOs.PerformanceReview
         public string? Review { get; set; }
         public int RatingScore { get; set; }
         public string EmployeeName { get; set; }
-        public DateOnly date {  get; set; }
+        public int month {  get; set; }
+        public int year { get; set; }
     }
 }

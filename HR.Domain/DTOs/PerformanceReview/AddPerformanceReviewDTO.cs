@@ -15,6 +15,6 @@ namespace HR.Domain.DTOs.PerformanceReview
         [Range(1, 10)]
         public int RatingScore { get; set; }
         public string EmployeeId{ get; set; }
-        public DateOnly date { get; set; }
+        public DateOnly Date { get; set; }
     }
 }

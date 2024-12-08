@@ -12,7 +12,7 @@ namespace HR.Services.Services
     public interface IPerformanceReviewServices
     {
         public Task<Response<IEnumerable<GetPerformanceReviewDTO>>> GetPerformanceReviewbyEmployeeid(string Employeeid);
-        public Task<Response<GetPerformanceReviewDTO>> GetPerformanceReviewbyDateforEmployee(string Employeeid, DateOnly date);
+        public Task<Response<GetPerformanceReviewDTO>> GetPerformanceReviewbyDateforEmployee(string Employeeid, int month, int year);
         public Task<Response<string>> DeletePerformanceReviewforemployee(string Employeeid);
         public Task<Response<string>> DeletePerformance(int id);
         public Task<Response<string>> AddPerformanceReviewforEmployee(AddPerformanceReviewDTO addPerformanceReview);
