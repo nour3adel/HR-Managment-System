@@ -3,3 +3,6 @@
 *.suo
 bin/
 obj/
+# Exclude appsettings.json
+appsettings.json
+

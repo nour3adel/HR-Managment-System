@@ -5,6 +5,7 @@ namespace HR.Infrastructure.Common
     public interface IGenericRepository<T> where T : class
     {
         Task DeleteRangeAsync(ICollection<T> entities);
+        Task<List<T>> Selectall();
         Task<T> GetByIdAsync(int id);
         Task SaveChangesAsync();
         IDbContextTransaction BeginTransaction();

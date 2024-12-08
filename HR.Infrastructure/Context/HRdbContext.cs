@@ -1,12 +1,13 @@
 using HR.Domain.Classes;
 using HR.Domain.Classes.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 namespace HR.Infrastructure.Context
 {
-    public class HRdbContext : IdentityDbContext<Employee, Role, string>
+    public class HRdbContext : IdentityDbContext<Employee, IdentityRole, string>
     {
 
         public HRdbContext() : base() { }
@@ -17,6 +18,7 @@ namespace HR.Infrastructure.Context
 
         // DbSet properties for your entities
         public virtual DbSet<Employee> Employees { get; set; }
+        public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<Attendance> Attendances { get; set; }
         public virtual DbSet<LeaveRequest> LeaveRequests { get; set; }
         public virtual DbSet<Payroll> Payrolls { get; set; }
@@ -28,7 +30,10 @@ namespace HR.Infrastructure.Context
 
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-
+            modelBuilder.Entity<Role>().HasData(
+               new Role() { Name = "User", NormalizedName = "USER" },
+               new Role() { Name = "Manager", NormalizedName = "MANAGER" }
+               );
         }
 
     }

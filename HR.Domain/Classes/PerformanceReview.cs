@@ -19,6 +19,8 @@ namespace HR.Domain.Classes
 
         [Required]
         public string EmployeeId { get; set; }
+        [Required]
+        public DateOnly Date {  get; set; }
 
         // Navigation property
         [ForeignKey(nameof(EmployeeId))]

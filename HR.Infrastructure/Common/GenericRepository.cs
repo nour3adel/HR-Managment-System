@@ -16,7 +16,7 @@ namespace HR.Infrastructure.Common
         #region Constructor(s)
         public GenericRepository(HRdbContext dbContext)
         {
-
+            _dbContext = dbContext;
         }
 
         #endregion
@@ -26,14 +26,16 @@ namespace HR.Infrastructure.Common
 
         #endregion
 
-        #region Actions
+        #region Actions     
+        public async Task<List<T>> Selectall()
+        {
+            return await _dbContext.Set<T>().ToListAsync();
+        }
         public virtual async Task<T> GetByIdAsync(int id)
         {
 
             return await _dbContext.Set<T>().FindAsync(id);
         }
-
-
         public IQueryable<T> GetTableNoTracking()
         {
             return _dbContext.Set<T>().AsNoTracking().AsQueryable();

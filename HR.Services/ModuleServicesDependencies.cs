@@ -10,6 +10,14 @@ namespace HR.Services
         public static IServiceCollection AddServicesDependencies(this IServiceCollection services)
         {
             services.AddScoped<IEmployeeServices, EmployeeServices>();
+            services.AddScoped<IAttendanceServices, AttendanceService>();
+            services.AddScoped<IPayrollServices, PayrollServices>();
+            services.AddScoped<IPerformanceReviewServices, PerformanceReviewServices>();
+            services.AddScoped<ILeaveRequestServices, LeaveRequestServices>();
+            services.AddScoped<INotificationServices, NotificationServices>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IAutherizationServices, AutherizationServices>();
+            services.AddScoped<IDepartmentServices, DepartmentServices>();
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             return services;

@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace HR.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,6 +18,7 @@ namespace HR.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Discriminator = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false),
                     Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -63,9 +66,11 @@ namespace HR.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FullName = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
                     Salary = table.Column<decimal>(type: "Money", nullable: false),
                     DepartmentId = table.Column<int>(type: "int", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
+                    Position = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -181,7 +186,8 @@ namespace HR.Infrastructure.Migrations
                 name: "Attendances",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     EmployeeId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Date = table.Column<DateOnly>(type: "date", nullable: false),
                     ClockInTime = table.Column<TimeOnly>(type: "time", nullable: false),
@@ -203,12 +209,13 @@ namespace HR.Infrastructure.Migrations
                 name: "LeaveRequests",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     StartDate = table.Column<DateOnly>(type: "date", nullable: false),
                     EndDate = table.Column<DateOnly>(type: "date", nullable: true),
                     EmployeeId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    Status = table.Column<int>(type: "int", maxLength: 20, nullable: false)
+                    Status = table.Column<int>(type: "int", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -225,11 +232,14 @@ namespace HR.Infrastructure.Migrations
                 name: "Notifications",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     EmployeeId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     MessageContent = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Type = table.Column<int>(type: "int", maxLength: 20, nullable: false)
+                    Type = table.Column<int>(type: "int", maxLength: 20, nullable: false),
+                    subject = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    isUrgent = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -251,8 +261,7 @@ namespace HR.Infrastructure.Migrations
                     Month = table.Column<int>(type: "int", nullable: false),
                     Year = table.Column<int>(type: "int", nullable: false),
                     Bonus = table.Column<decimal>(type: "Money", nullable: false),
-                    Deduction = table.Column<decimal>(type: "Money", nullable: false),
-                    FinalSalary = table.Column<decimal>(type: "Money", nullable: false)
+                    Deduction = table.Column<decimal>(type: "Money", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -272,7 +281,8 @@ namespace HR.Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false),
                     Review = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     RatingScore = table.Column<int>(type: "int", nullable: false),
-                    EmployeeId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    EmployeeId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Date = table.Column<DateOnly>(type: "date", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -283,6 +293,15 @@ namespace HR.Infrastructure.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Discriminator", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { "2628b7eb-7042-4329-8ca9-00261bf6c337", null, "Role", "User", "USER" },
+                    { "f41be486-6102-43bf-a67a-b614d4895a0e", null, "Role", "Manager", "MANAGER" }
                 });
 
             migrationBuilder.CreateIndex(
