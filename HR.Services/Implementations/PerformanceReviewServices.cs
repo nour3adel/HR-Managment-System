@@ -90,9 +90,9 @@ namespace HR.Services.Implementations
             {
                 return BadRequest<string>("Performancereview id exist, please Enter valid id");
             }
-            var Performance = await performanceReviewRepository.GetByDateforEmployee(perfreview.EmployeeId, perfreview.date);
+            var Performance = await performanceReviewRepository.GetByDateforEmployee(perfreview.EmployeeId, perfreview.Date);
             if(Performance != null)
-                return BadRequest<string>($"Performancereview exist for employee with id: {perfreview.EmployeeId} with date: {perfreview.date}");  
+                return BadRequest<string>($"Performancereview exist for employee with id: {perfreview.EmployeeId} with date: {perfreview.Date}");  
             var PerFormance = mapper.Map<PerformanceReview>(perfreview);
             await performanceReviewRepository.AddAsync(PerFormance);
             await performanceReviewRepository.SaveChangesAsync();
@@ -100,23 +100,36 @@ namespace HR.Services.Implementations
         }
         public async Task<Response<string>> UpdatePerformanceReviewforEmployee(EditPerformanceReviewDTO editPerformanceReview)
         {
-
             var user = await _userManager.FindByIdAsync(editPerformanceReview.EmployeeId);
             if (user == null)
             {
                 return NotFound<string>("Employee does not exist.");
             }
+
             var performances = await performanceReviewRepository.GetByEmployeeID(editPerformanceReview.EmployeeId);
-            foreach (var performance in performances)
+            if (performances.Any(p => p.Date == editPerformanceReview.Date && p.Id != editPerformanceReview.Id))
             {
-                if (performance.Date == editPerformanceReview.date)
-                    return BadRequest<string>("there is already performance with this date");
+                return BadRequest<string>("There is already a performance review with this date.");
             }
-            var Performance = mapper.Map<PerformanceReview>(editPerformanceReview);
-            await performanceReviewRepository.UpdateAsync(Performance);
-            return Updated<string>("Payroll Edited");
-            
+
+            // Fetch the existing PerformanceReview by Id
+            var existingPerformance = await performanceReviewRepository.GetByIdAsync(editPerformanceReview.Id);
+            if (existingPerformance == null)
+            {
+                return NotFound<string>("Performance review not found.");
+            }
+
+            // Update the properties
+            existingPerformance.RatingScore = editPerformanceReview.RatingScore;
+            existingPerformance.Review = editPerformanceReview.Review;
+            existingPerformance.Date = editPerformanceReview.Date;
+
+            // Save changes
+            await performanceReviewRepository.UpdateAsync(existingPerformance);
+
+            return Updated<string>("Performance review updated successfully.");
         }
+
         public async Task<Response<string>> UpdatePerformanceReview(EditPerformanceReviewDTO editPerformanceReview)
         {
 
