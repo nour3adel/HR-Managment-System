@@ -31,13 +31,13 @@ namespace HR.API.Controllers
             return NewResult(result);
         }
 
-        [HttpGet("{Employeeid}/Monthly")]
+        [HttpGet("{Employeeid}/{month}/{year}")]
         [SwaggerOperation(Summary = "Get performance review details by Employee ID and date")]
         [ProducesResponseType(typeof(PerformanceReview), 200)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> Getbydateforemployee(string Employeeid, DateOnly date)
+        public async Task<IActionResult> Getbydateforemployee(string Employeeid, int month, int year)
         {
-            var result = await _performanceReviewServices.GetPerformanceReviewbyDateforEmployee(Employeeid, date);
+            var result = await _performanceReviewServices.GetPerformanceReviewbyDateforEmployee(Employeeid, month, year);
             return NewResult(result);
         }
 

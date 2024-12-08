@@ -23,9 +23,9 @@ namespace HR.Infrastructure.Repositories
             var result = await PerformanceReviews.Where(p => p.EmployeeId  == employeeId).ToListAsync();
             return result;
         }
-        public async Task<PerformanceReview> GetByDateforEmployee(string Employeeid, DateOnly date)
+        public async Task<PerformanceReview> GetByDateforEmployee(string Employeeid, int month, int year)
         {
-            var result =  PerformanceReviews.FirstOrDefault(p => p.EmployeeId == Employeeid && p.Date == date);
+            var result =  PerformanceReviews.FirstOrDefault(p => p.EmployeeId == Employeeid && p.Date.Month == month && p.Date.Year == year);
             return result;
         }
     }

@@ -48,34 +48,35 @@ namespace HR.Services.Implementations
                    Review = performance.Review,
                    RatingScore = performance.RatingScore,
                    EmployeeName = performance.Employee.FullName,
-                   date = performance.Date
+                   month = performance.Date.Month,
+                   year = performance.Date.Year
                 };
                 PerformanceReviewDTOs.Add(PerformanceReviewDTO);
             }
             return Success<IEnumerable<GetPerformanceReviewDTO>>(PerformanceReviewDTOs);
         }
-        public async Task<Response<GetPerformanceReviewDTO>> GetPerformanceReviewbyDateforEmployee(string Employeeid, DateOnly date)
+        public async Task<Response<GetPerformanceReviewDTO>> GetPerformanceReviewbyDateforEmployee(string Employeeid, int month, int year)
         {
             var user = await _userManager.FindByIdAsync(Employeeid);
             if (user == null)
             {
                 return NotFound<GetPerformanceReviewDTO>("Employee does not exist.");
             }
-            var performances = await performanceReviewRepository.GetByDateforEmployee(Employeeid, date);
-
-                var PerformanceReviewDTO = new GetPerformanceReviewDTO()
+            var performances = await performanceReviewRepository.GetByDateforEmployee(Employeeid, month, year);
+            if (performances == null)
+            {
+                return BadRequest<GetPerformanceReviewDTO>($"There is No PerformanceReview History for Employee with id: {Employeeid} for date: {month}/{year}");
+            }
+            var PerformanceReviewDTO = new GetPerformanceReviewDTO()
                 {
                     Id = performances.Id,
                     Review = performances.Review,
                     RatingScore = performances.RatingScore,
                     EmployeeName = performances.Employee.FullName,
-                    date = performances.Date
+                    month = performances.Date.Month,
+                    year = performances.Date.Year
                 };
             
-            if (performances == null)
-            {
-                return BadRequest<GetPerformanceReviewDTO>($"There is No Payroll History for Employee with id: {Employeeid} for date: {date}");
-            }
             return Success<GetPerformanceReviewDTO>(PerformanceReviewDTO);
         }
         public async Task<Response<string>> AddPerformanceReviewforEmployee(AddPerformanceReviewDTO perfreview)
@@ -90,9 +91,9 @@ namespace HR.Services.Implementations
             {
                 return BadRequest<string>("Performancereview id exist, please Enter valid id");
             }
-            var Performance = await performanceReviewRepository.GetByDateforEmployee(perfreview.EmployeeId, perfreview.Date);
+            var Performance = await performanceReviewRepository.GetByDateforEmployee(perfreview.EmployeeId, perfreview.Date.Month, perfreview.Date.Year);
             if(Performance != null)
-                return BadRequest<string>($"Performancereview exist for employee with id: {perfreview.EmployeeId} with date: {perfreview.Date}");  
+                return BadRequest<string>($"Performancereview exist for employee with id: {perfreview.EmployeeId} with date: {perfreview.Date.Month}/{perfreview.Date.Year}");  
             var PerFormance = mapper.Map<PerformanceReview>(perfreview);
             await performanceReviewRepository.AddAsync(PerFormance);
             await performanceReviewRepository.SaveChangesAsync();
