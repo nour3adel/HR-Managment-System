@@ -72,7 +72,6 @@ namespace HR.Services.Implementations
                 var errors = string.Join(", ", creationResult.Errors.Select(e => e.Description));
                 return BadRequest<string>($"User creation failed: {errors}");
             }
-
             // Assign role to the user
 
             var role = user.IsAdmin ? "Manager" : "User";
@@ -119,16 +118,34 @@ namespace HR.Services.Implementations
 
 
         #region Logout
-        public async Task<Response<string>> logout()
-        {
-            if (!_signin.Context.User.Identity.IsAuthenticated)
-                return BadRequest<string>("No user is currently logged in");
 
-            await _signin.SignOutAsync();
-            return Success<string>("Logout successful");
+        public async Task<Response<string>> Logout()
+        {
+            try
+            {
+                // Check if the user is authenticated
+                if (!_signin.Context.User?.Identity?.IsAuthenticated ?? false)
+                {
+                    return NotFound<string>("No user is currently logged in");
+
+                }
+
+                // Perform sign-out
+                await _signin.SignOutAsync();
+
+                return Success("Logout successful");
+
+            }
+            catch (Exception ex)
+            {
+                // Log the exception if logging is enabled in the application
+                return BadRequest<string>(ex.Message);
+
+            }
         }
 
         #endregion
+
 
         #region Edit Employee
         public async Task<Response<string>> EditUser(EditCutomerDTO userDto)
@@ -148,6 +165,8 @@ namespace HR.Services.Implementations
             employee.UserName = userDto.username?.Trim();
             employee.FullName = userDto.fullname?.Trim();
             employee.Address = userDto.address?.Trim();
+            employee.Position = userDto.position?.Trim();
+            employee.Salary = userDto.salary;
 
             // Attempt to update the user
             var result = await _userManager.UpdateAsync(employee);
@@ -181,7 +200,9 @@ namespace HR.Services.Implementations
                     address = user.Address,
                     username = user.UserName,
                     email = user.Email,
-                    phonenumber = user.PhoneNumber
+                    phonenumber = user.PhoneNumber,
+                    position = user.Position,
+                    salary = user.Salary
                 })
                 .ToList();
 
@@ -207,7 +228,9 @@ namespace HR.Services.Implementations
                     address = user.Address,
                     username = user.UserName,
                     email = user.Email,
-                    phonenumber = user.PhoneNumber
+                    phonenumber = user.PhoneNumber,
+                    position = user.Position,
+                    salary = user.Salary
                 })
                 .ToList();
 
@@ -233,7 +256,9 @@ namespace HR.Services.Implementations
                     address = emp.Address,
                     username = emp.UserName,
                     email = emp.Email,
-                    phonenumber = emp.PhoneNumber
+                    phonenumber = emp.PhoneNumber,
+                    position = emp.Position,
+                    salary = emp.Salary
                 })
                 .ToList();
 
@@ -259,7 +284,9 @@ namespace HR.Services.Implementations
                 address = user.Address,
                 username = user.UserName,
                 email = user.Email,
-                phonenumber = user.PhoneNumber
+                phonenumber = user.PhoneNumber,
+                position = user.Position,
+                salary = user.Salary
             };
 
             // Return the mapped DTO

@@ -37,7 +37,7 @@ namespace HR.Infrastructure.Repositories
                 Date = a.Date,
                 ClockInTime = a.ClockInTime,
                 ClockOutTime = a.ClockOutTime,
-                Status = EnumString.MapAttendanceStatus(a.Status)
+                Status = EnumString.MapEnumToString(a.Status)
             }).ToList();
 
             return result;
@@ -57,7 +57,28 @@ namespace HR.Infrastructure.Repositories
                 Date = a.Date,
                 ClockInTime = a.ClockInTime,
                 ClockOutTime = a.ClockOutTime,
-                Status = EnumString.MapAttendanceStatus(a.Status)
+                Status = EnumString.MapEnumToString(a.Status)
+            }).ToList();
+
+            return result;
+
+        }
+
+        public async Task<IEnumerable<AttendanceRecordDTO>> GetAllAttendance()
+        {
+            // Fetch attendance records for the given date from the database
+            var attendanceRecords = await attendances
+
+                .ToListAsync();
+
+            // Now map the status outside the query expression
+            var result = attendanceRecords.Select(a => new AttendanceRecordDTO
+            {
+                EmployeeName = a.Employee.FullName,
+                Date = a.Date,
+                ClockInTime = a.ClockInTime,
+                ClockOutTime = a.ClockOutTime,
+                Status = EnumString.MapEnumToString(a.Status)
             }).ToList();
 
             return result;

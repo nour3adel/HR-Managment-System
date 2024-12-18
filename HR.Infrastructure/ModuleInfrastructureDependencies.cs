@@ -12,10 +12,14 @@ namespace HR.Infrastructure
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             services.AddScoped<ILeaveRequestRepository, LeaveRequestRepository>();
             services.AddScoped<IAttendanceRepository, AttendanceRepostory>();
+
             services.AddScoped<INotificationRepository, NotificationRepository>();
             services.AddScoped<IDepartmentRepository, DepartmentRepository>();
-            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
+            services.AddScoped<IPayrollRepository, PayrollRepository>();
+            services.AddScoped<IPerformanceReviewRepository, PerformanceReviewRepository>();
+
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             return services;
         }
     }

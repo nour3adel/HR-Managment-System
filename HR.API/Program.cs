@@ -14,13 +14,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowSpecificOrigins", policy =>
-    {
-        policy.WithOrigins("http://localhost:3000", "http://yourclientdomain.com") // Add allowed origins
-              .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials(); // Allow credentials if needed
-    });
+
 
     options.AddPolicy("AllowAll", policy =>
     {

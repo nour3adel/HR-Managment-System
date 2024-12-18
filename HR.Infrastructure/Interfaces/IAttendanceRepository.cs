@@ -8,6 +8,7 @@ namespace HR.Infrastructure.Interfaces
     {
         public Task<Attendance> IsExist(string EmployeeID, DateOnly date);
         public Task<IEnumerable<AttendanceRecordDTO>> GetDailyAttendance(DateOnly date);
+        public Task<IEnumerable<AttendanceRecordDTO>> GetAllAttendance();
         public Task<IEnumerable<AttendanceRecordDTO>> GetAttendanceByID(string employeeId);
         public Task<Attendance> GetByEmployeeID(string EmployeeID);
 

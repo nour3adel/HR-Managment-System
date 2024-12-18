@@ -60,7 +60,10 @@ namespace HR.Infrastructure.Migrations
             modelBuilder.Entity("HR.Domain.Classes.Department", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -232,7 +235,10 @@ namespace HR.Infrastructure.Migrations
             modelBuilder.Entity("HR.Domain.Classes.Payroll", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Bonus")
                         .HasColumnType("Money");
@@ -243,9 +249,6 @@ namespace HR.Infrastructure.Migrations
                     b.Property<string>("EmployeeId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<decimal>("FinalSalary")
-                        .HasColumnType("Money");
 
                     b.Property<int>("Month")
                         .HasColumnType("int");
@@ -263,7 +266,13 @@ namespace HR.Infrastructure.Migrations
             modelBuilder.Entity("HR.Domain.Classes.PerformanceReview", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date");
 
                     b.Property<string>("EmployeeId")
                         .IsRequired()
@@ -434,13 +443,13 @@ namespace HR.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "9bdff529-aac9-425c-a14f-3ac1e1e155cb",
+                            Id = "41ddbe6e-33c6-42b8-a0a2-da0a44fac14c",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "02e12fd6-ddd0-42fe-9734-047dabdec084",
+                            Id = "c8b7fdc1-ed5b-4d8a-a687-b5d5fa0737b9",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         });

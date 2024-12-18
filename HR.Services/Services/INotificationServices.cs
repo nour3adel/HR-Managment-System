@@ -7,5 +7,6 @@ namespace HR.Services.Services
     {
         public Task<Response<string>> Send(SendDTO send);
         public Task<Response<IEnumerable<GetNotificationDTO>>> GetByID(string empID);
+        public Task<Response<IEnumerable<GetNotificationDTO>>> GetAll();
     }
 }

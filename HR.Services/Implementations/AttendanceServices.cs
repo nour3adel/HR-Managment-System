@@ -90,17 +90,25 @@ namespace HR.Services.Implementations
                 return BadRequest<string>("Employee has already clocked out.");
             }
 
-            // Set clock-out time
             attendance.ClockOutTime = TimeOnly.FromDateTime(DateTime.Now);
 
-            if (attendance.ClockOutTime < attendance.ClockInTime.AddHours(8))
+            // Convert TimeOnly to DateTime by assuming today's date (to handle clock-in and clock-out time on the same day)
+            DateTime clockInDateTime = DateTime.Today.AddHours(attendance.ClockInTime.Hour).AddMinutes(attendance.ClockInTime.Minute);
+            DateTime clockOutDateTime = DateTime.Today.AddHours(attendance.ClockOutTime.Value.Hour).AddMinutes(attendance.ClockOutTime.Value.Minute);
+
+            // Calculate the difference in hours
+            TimeSpan timeDifference = clockOutDateTime - clockInDateTime;
+
+            if (timeDifference.TotalHours < 8)
             {
-                attendance.Status = AttendanceStatus.OnLeave;
+                attendance.Status = AttendanceStatus.LeaveEarly;  // If less than 8 hours, the employee left early
             }
             else
             {
-                attendance.Status = AttendanceStatus.Present;
+                attendance.Status = AttendanceStatus.Present;  // If 8 hours or more, the employee is present
             }
+
+
 
             // Save changes
             await _attendanceRepository.SaveChangesAsync();
@@ -162,6 +170,18 @@ namespace HR.Services.Implementations
 
         #endregion
 
+        #region Get All Attendance Service
+        public async Task<Response<IEnumerable<AttendanceRecordDTO>>> GetAllAttendance()
+        {
+
+            var attendanceRecords = await _attendanceRepository.GetAllAttendance();
+
+
+
+            return Success<IEnumerable<AttendanceRecordDTO>>(attendanceRecords);
+        }
+        #endregion
+
         #region Update Attendance Service
         public async Task<Response<string>> updateAttendanceAsync(UpdateAttendanceDTO record)
         {
@@ -216,6 +236,13 @@ namespace HR.Services.Implementations
             return Deleted<string>("Deleted Successfully");
         }
 
+
+
+
         #endregion
+
+
+
+
     }
 }

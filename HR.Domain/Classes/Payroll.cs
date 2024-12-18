@@ -7,7 +7,7 @@ namespace HR.Domain.Classes
     public class Payroll
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [Required]
@@ -18,7 +18,7 @@ namespace HR.Domain.Classes
         public int Month { get; set; }
 
         [Required]
-        [Range(2020, 2025)]
+        [Range(2020, 2024)]
         public int Year { get; set; }
 
         [Column(TypeName = "Money")]
@@ -26,9 +26,6 @@ namespace HR.Domain.Classes
 
         [Column(TypeName = "Money")]
         public decimal Deduction { get; set; }
-
-        [Column(TypeName = "Money")]
-        public decimal FinalSalary { get; set; }
 
         // Navigation property
         [ForeignKey(nameof(EmployeeId))]

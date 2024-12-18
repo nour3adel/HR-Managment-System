@@ -6,3 +6,5 @@ obj/
 # Exclude appsettings.json
 appsettings.json
 
+# Exclude Migrations folder
+Migrations/

@@ -15,5 +15,9 @@ namespace HR.Domain.DTOs.Employee
         public string address { get; set; }
 
         public string phonenumber { get; set; }
+        public string position { get; set; }
+        public decimal salary { get; set; }
+
+
     }
 }

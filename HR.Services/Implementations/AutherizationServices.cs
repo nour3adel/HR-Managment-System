@@ -44,6 +44,8 @@ namespace HR.Services.Implementations
             return BadRequest<string>("Failed");
 
         }
+
+
         #endregion
 
         #region Edit Role Name
@@ -103,6 +105,29 @@ namespace HR.Services.Implementations
             //problem
             var errors = string.Join("-", result.Errors);
             return BadRequest<string>(errors);
+        }
+        #endregion
+
+        #region Add Role To Specific User
+        public async Task<Response<string>> AddRoleToEmployee(string employeeID, string role)
+        {
+
+            var user = await _userManager.FindByIdAsync(employeeID);
+            if (user == null) return NotFound<string>("No USer Found");
+
+            if (!await _roleManager.RoleExistsAsync(role))
+            {
+                return NotFound<string>("Specified role does not exist.");
+            }
+
+            var roleResult = await _userManager.AddToRoleAsync(user, role);
+            if (!roleResult.Succeeded)
+            {
+                var errors = string.Join(", ", roleResult.Errors.Select(e => e.Description));
+                return BadRequest<string>($"Failed to assign role: {errors}");
+            }
+            return Success("Role Added Successfully");
+
         }
         #endregion
     }

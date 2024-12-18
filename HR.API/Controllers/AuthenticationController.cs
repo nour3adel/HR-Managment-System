@@ -1,6 +1,7 @@
 ﻿using HR.API.Base;
 using HR.Domain.DTOs.Employee;
 using HR.Services.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -19,6 +20,25 @@ namespace HR.API.Controllers
             this.authenticationService = authenticationService;
 
         }
+        #region Validate access Token
+        [Authorize(Roles = "User,Manager,Admin")]
+        [SwaggerOperation(Summary = "Validate access Token", OperationId = "ValidateToken")]
+        [HttpGet("Validate-Token")]
+
+        public async Task<IActionResult> ValidateToken(string accessToken)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await authenticationService.ValidateToken(accessToken);
+                return NewResult(result);
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
+        #endregion
+
         #region Login Employee
 
         [SwaggerOperation(Summary = "Login Employee", OperationId = "LoginUser")]
@@ -38,23 +58,5 @@ namespace HR.API.Controllers
         }
         #endregion
 
-        #region Validate access Token
-
-        [SwaggerOperation(Summary = "Validate access Token", OperationId = "ValidateToken")]
-        [HttpGet("Validate-Token")]
-
-        public async Task<IActionResult> ValidateToken(string accessToken)
-        {
-            if (ModelState.IsValid)
-            {
-                var result = await authenticationService.ValidateToken(accessToken);
-                return NewResult(result);
-            }
-            else
-            {
-                return BadRequest(ModelState);
-            }
-        }
-        #endregion
     }
 }

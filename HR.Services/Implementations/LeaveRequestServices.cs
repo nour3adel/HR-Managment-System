@@ -29,20 +29,21 @@ namespace HR.Services.Implementations
         #endregion
 
         #region Create Leave Request Service
-        public async Task<Response<GetLeaveRequestDTO>> CreateLeaveRequest(CreateLeaveRequestDTO createLeaveRequestDTO)
+        public async Task<Response<string>> CreateLeaveRequest(CreateLeaveRequestDTO createLeaveRequestDTO)
         {
             // Validate Employee existence
             var employee = await _userManager.FindByIdAsync(createLeaveRequestDTO.EmployeeId);
             if (employee == null)
-                return NotFound<GetLeaveRequestDTO>("Employee does not exist");
+                return NotFound<string>("Employee does not exist");
 
             // Validate date range
             if (createLeaveRequestDTO.EndDate < createLeaveRequestDTO.StartDate)
-                return BadRequest<GetLeaveRequestDTO>("End date must be after the start date");
+                return BadRequest<string>("End date must be after the start date");
 
             // Map DTO to Entity
             LeaveRequest leaveRequest = new LeaveRequest()
             {
+
                 EmployeeId = createLeaveRequestDTO.EmployeeId,
                 StartDate = createLeaveRequestDTO.StartDate,
                 EndDate = createLeaveRequestDTO.EndDate,
@@ -53,16 +54,8 @@ namespace HR.Services.Implementations
             // Add to repository
             await _leaveRequestRepository.AddAsync(leaveRequest);
 
-            GetLeaveRequestDTO leaveRequestDTO = new GetLeaveRequestDTO()
-            {
-                EmployeeId = leaveRequest.EmployeeId,
-                StartDate = leaveRequest.StartDate,
-                EndDate = leaveRequest.EndDate,
-                Description = leaveRequest.Description,
-                Status = EnumString.MapLeaveRequestStatus(leaveRequest.Status)
-            };
 
-            return Created<GetLeaveRequestDTO>(leaveRequestDTO);
+            return Created("Created Successfully");
         }
         #endregion
 
@@ -73,11 +66,13 @@ namespace HR.Services.Implementations
             if (lrequest == null) return NotFound<GetLeaveRequestDTO>($"Leave Request With Id = {id}  Not Exist");
             GetLeaveRequestDTO leaveRequestDTO = new GetLeaveRequestDTO()
             {
-                EmployeeId = lrequest.EmployeeId,
+                Id = lrequest.Id,
+                EmployeeName = lrequest.Employee.FullName,
+
                 StartDate = lrequest.StartDate,
                 EndDate = lrequest.EndDate,
                 Description = lrequest.Description,
-                Status = EnumString.MapLeaveRequestStatus(lrequest.Status)
+                Status = EnumString.MapEnumToString<LeaveRequestStatus>(lrequest.Status)
             };
             return Success(leaveRequestDTO);
         }
@@ -131,6 +126,17 @@ namespace HR.Services.Implementations
             lrequest.Status = LeaveRequestStatus.Rejected;
             await _leaveRequestRepository.DeleteAsync(lrequest);
             return Deleted<string>("Deleted Successfuly");
+        }
+
+
+        #endregion
+        #region Get ALL Leave Request Service
+        public async Task<Response<IEnumerable<GetLeaveRequestDTO>>> GetAllLeaveRequests()
+        {
+            var lrequest = await _leaveRequestRepository.GetAllLeaveRequests();
+            if (lrequest == null) return NotFound<IEnumerable<GetLeaveRequestDTO>>("No Leave Request Found");
+
+            return Success(lrequest);
         }
         #endregion
     }

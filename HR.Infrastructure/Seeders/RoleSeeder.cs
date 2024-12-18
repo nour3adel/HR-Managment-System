@@ -9,19 +9,23 @@ namespace HR.Infrastructure.Seeders
         public static async Task Seed(RoleManager<Role> rolemanager)
         {
             var roleCount = await rolemanager.Roles.CountAsync();
-            if (roleCount <= 0)
+
+            await rolemanager.CreateAsync(new Role()
             {
-                await rolemanager.CreateAsync(new Role()
-                {
-                    Name = "Manager",
-                    NormalizedName = "MANAGER"
-                });
-                await rolemanager.CreateAsync(new Role()
-                {
-                    Name = "User",
-                    NormalizedName = "USER"
-                });
-            }
+                Name = "Manager",
+                NormalizedName = "MANAGER"
+            });
+            await rolemanager.CreateAsync(new Role()
+            {
+                Name = "User",
+                NormalizedName = "USER"
+            });
+            await rolemanager.CreateAsync(new Role()
+            {
+                Name = "Hr",
+                NormalizedName = "HR"
+            });
+
         }
     }
 }

@@ -5,6 +5,6 @@ namespace HR.Domain.Enums
         Present,
         Absent,
         Late,
-        OnLeave
+        LeaveEarly
     }
 }

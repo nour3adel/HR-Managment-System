@@ -5,6 +5,7 @@
         public int Id { get; set; }
         public string titlee { get; set; }
 
+        public string EmployeeName { get; set; }
         public string? MessageContent { get; set; }
 
         public DateTime Date { get; set; }

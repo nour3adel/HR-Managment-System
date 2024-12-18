@@ -54,5 +54,16 @@ namespace HR.Services.Implementations
 
 
         }
+
+        public async Task<Response<IEnumerable<GetNotificationDTO>>> GetAll()
+        {
+
+            var notification = await _notificationRepository.GetAllNotifications();
+            if (notification == null)
+            {
+                return NotFound<IEnumerable<GetNotificationDTO>>("No Notifications Found");
+            }
+            return Success(notification);
+        }
     }
 }

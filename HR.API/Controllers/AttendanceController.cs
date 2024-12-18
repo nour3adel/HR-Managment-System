@@ -1,6 +1,7 @@
 ﻿using HR.API.Base;
 using HR.Domain.DTOs.Attendance;
 using HR.Services.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -18,8 +19,52 @@ namespace HR.API.Controllers
             _attendanceservices = attendanceservices;
         }
 
-        #region Record employee clock-in time.
+        #region Retrieve attendance records for all employee. (Manager Only)
+        [Authorize(Roles = "Admin,Manager")]
+        [HttpGet]
+        [SwaggerOperation(Summary = "Retrieve attendance records for all employee", OperationId = "GetAllAttendance")]
 
+        public async Task<IActionResult> GetAllAttendance()
+        {
+            var attendanceRecords = await _attendanceservices.GetAllAttendance();
+            return NewResult(attendanceRecords);
+        }
+        #endregion
+
+        #region Retrieve attendance records for a specific employee.
+
+        [Authorize(Roles = "Admin,User,Manager")]
+        [HttpGet("{employeeId}")]
+        [SwaggerOperation(Summary = "Retrieve attendance records for a specific employee", OperationId = "GetAttendanceByEmployee")]
+
+        public async Task<IActionResult> GetAttendanceByEmployee(string employeeId)
+        {
+            var attendanceRecords = await _attendanceservices.GetAttendanceById(employeeId);
+            return NewResult(attendanceRecords);
+        }
+        #endregion
+
+        #region Retrieve attendance for all employees on a specific date. (Manager Only)
+        [Authorize(Roles = "Admin")]
+        [HttpGet("daily")]
+        [SwaggerOperation(Summary = "Retrieve attendance for all employees on a specific date", OperationId = "GetDailyAttendance")]
+        public async Task<IActionResult> GetDailyAttendance([FromQuery] string date)
+        {
+            if (DateOnly.TryParse(date, out DateOnly dateValue))
+            {
+                var dailyAttendance = await _attendanceservices.GetDailyAttendanceAsync(dateValue);
+                return NewResult(dailyAttendance);
+            }
+            else
+            {
+                return BadRequest("Invalid date format. Please use yyyy-MM-dd.");
+            }
+        }
+
+        #endregion
+
+        #region Record employee clock-in time.
+        [Authorize(Roles = "User")]
         [HttpPost("clock-in")]
         [SwaggerOperation(Summary = "Record employee clock-in time", OperationId = "ClockIn")]
 
@@ -38,7 +83,7 @@ namespace HR.API.Controllers
         #endregion
 
         #region Record employee clock-out time.
-
+        [Authorize(Roles = "User")]
         [HttpPost("clock-out")]
         [SwaggerOperation(Summary = "Record employee clock-out time", OperationId = "Clockout")]
 
@@ -56,34 +101,9 @@ namespace HR.API.Controllers
         }
         #endregion
 
-        #region Retrieve attendance records for a specific employee.
+        #region Update Attendance (Admin Only)
 
-        [HttpGet("{employeeId}")]
-        [SwaggerOperation(Summary = "Retrieve attendance records for a specific employee", OperationId = "GetAttendanceByEmployee")]
-
-        public async Task<IActionResult> GetAttendanceByEmployee(string employeeId)
-        {
-            var attendanceRecords = await _attendanceservices.GetAttendanceById(employeeId);
-            return NewResult(attendanceRecords);
-        }
-        #endregion
-
-        #region Retrieve attendance for all employees on a specific date.
-
-        [HttpGet("daily")]
-        [SwaggerOperation(Summary = "Retrieve attendance for all employees on a specific date", OperationId = "GetDailyAttendance")]
-
-        public async Task<IActionResult> GetDailyAttendance([FromQuery] DateOnly date)
-        {
-            var dailyAttendance = await _attendanceservices.GetDailyAttendanceAsync(date);
-            return NewResult(dailyAttendance);
-        }
-
-        #endregion
-
-        #region Update Attendance (Manager Only)
-
-        // TODO :: Add Authorize  Update Attendance 
+        [Authorize(Roles = "Admin")]
         [HttpPut("update")]
         [SwaggerOperation(Summary = "Update Attendance (Role : Manager)", OperationId = "updateattendance")]
 
@@ -101,8 +121,8 @@ namespace HR.API.Controllers
         }
         #endregion
 
-        #region Delete Attendance (Manager Only)
-        // TODO :: Add Authorize Delete Attendance
+        #region Delete Attendance (Admin Only)
+        [Authorize(Roles = "Admin")]
         [HttpDelete("Delete")]
         [SwaggerOperation(Summary = "Delete Attendance (Role : Manager)", OperationId = "Deleteattendance")]
 
