@@ -115,11 +115,6 @@ namespace HR.Services.Implementations
             {
                 return NotFound<string>("Employee does not exist.");
             }
-            var paroll = await payrollRepository.GetByIdAsync(payroll.Id);
-            if (paroll != null)
-            {
-                return BadRequest<string>("Payroll id exist, please Enter valid id");
-            }
             var payRoll = await payrollRepository.GetByDateforEmployee(payroll.EmployeeId, payroll.Month, payroll.Year);
             if (payRoll != null)
                 return BadRequest<string>($"Payroll exist for employee with id: {payroll.EmployeeId} in Month: {payroll.Month} Year: {payroll.Year}");

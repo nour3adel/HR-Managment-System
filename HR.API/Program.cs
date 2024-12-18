@@ -1,6 +1,9 @@
+using HR.Domain.Classes.Identity;
 using HR.Infrastructure;
 using HR.Infrastructure.Context;
+using HR.Infrastructure.Seeders;
 using HR.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -46,11 +49,11 @@ var app = builder.Build();
 
 #region Seeder
 
-//using (var scope = app.Services.CreateScope())
-//{
-//    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
-//    await RoleSeeder.Seed(roleManager);
-//}
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
+    await RoleSeeder.Seed(roleManager);
+}
 
 #endregion
 

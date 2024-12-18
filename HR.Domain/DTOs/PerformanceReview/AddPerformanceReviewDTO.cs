@@ -4,7 +4,7 @@ namespace HR.Domain.DTOs.PerformanceReview
 {
     public class AddPerformanceReviewDTO
     {
-        public int Id { get; set; }
+
         [MaxLength(500)]
         public string? Review { get; set; }
         [Range(1, 10)]

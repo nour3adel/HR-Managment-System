@@ -74,7 +74,7 @@ namespace HR.Services.Implementations
             }
             // Assign role to the user
 
-            var role = user.IsAdmin ? "Manager" : "User";
+            var role = user.IsAdmin ? "Admin" : "User";
             // Check if the role exists
             if (!await _roleManager.RoleExistsAsync(role))
             {

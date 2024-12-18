@@ -4,7 +4,7 @@ namespace HR.Domain.DTOs.Payroll
 {
     public class AddPayrollDTO
     {
-        public int Id { get; set; }
+
         public string EmployeeId { get; set; }
         [Range(1, 12)]
         public int Month { get; set; }

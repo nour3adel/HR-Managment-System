@@ -23,8 +23,8 @@ namespace HR.Infrastructure.Seeders
                 });
                 await rolemanager.CreateAsync(new Role()
                 {
-                    Name = "Hr",
-                    NormalizedName = "HR"
+                    Name = "Admin",
+                    NormalizedName = "ADMIN"
                 });
             }
         }

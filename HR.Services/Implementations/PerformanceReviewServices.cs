@@ -36,7 +36,6 @@ namespace HR.Services.Implementations
             {
                 var PerformanceReviewDTO = new GetPerformanceReviewDTO()
                 {
-                    Id = performance.Id,
                     Review = performance.Review,
                     RatingScore = performance.RatingScore,
                     EmployeeName = performance.Employee.FullName,
@@ -61,7 +60,6 @@ namespace HR.Services.Implementations
             }
             var PerformanceReviewDTO = new GetPerformanceReviewDTO()
             {
-                Id = performances.Id,
                 Review = performances.Review,
                 RatingScore = performances.RatingScore,
                 EmployeeName = performances.Employee.FullName,
@@ -78,11 +76,7 @@ namespace HR.Services.Implementations
             {
                 return NotFound<string>("Employee does not exist.");
             }
-            var performance = await performanceReviewRepository.GetByIdAsync(perfreview.Id);
-            if (performance != null)
-            {
-                return BadRequest<string>("Performancereview id exist, please Enter valid id");
-            }
+
             var Performance = await performanceReviewRepository.GetByDateforEmployee(perfreview.EmployeeId, perfreview.Date.Month, perfreview.Date.Year);
             if (Performance != null)
                 return BadRequest<string>($"Performancereview exist for employee with id: {perfreview.EmployeeId} with date: {perfreview.Date.Month}/{perfreview.Date.Year}");
@@ -100,7 +94,7 @@ namespace HR.Services.Implementations
             }
 
             var performances = await performanceReviewRepository.GetByEmployeeID(editPerformanceReview.EmployeeId);
-            if (performances.Any(p => p.Date == editPerformanceReview.Date && p.Id != editPerformanceReview.Id))
+            if (performances.Any(p => p.Date == editPerformanceReview.Date))
             {
                 return BadRequest<string>("There is already a performance review with this date.");
             }
