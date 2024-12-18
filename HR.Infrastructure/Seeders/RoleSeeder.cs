@@ -12,6 +12,7 @@ namespace HR.Infrastructure.Seeders
 
             await rolemanager.CreateAsync(new Role()
             {
+<<<<<<< Updated upstream
                 Name = "Manager",
                 NormalizedName = "MANAGER"
             });
@@ -26,6 +27,24 @@ namespace HR.Infrastructure.Seeders
                 NormalizedName = "HR"
             });
 
+=======
+                await rolemanager.CreateAsync(new Role()
+                {
+                    Name = "Manager",
+                    NormalizedName = "MANAGER"
+                });
+                await rolemanager.CreateAsync(new Role()
+                {
+                    Name = "User",
+                    NormalizedName = "USER"
+                });
+                await rolemanager.CreateAsync(new Role()
+                {
+                    Name = "Hr",
+                    NormalizedName = "HR"
+                });
+            }
+>>>>>>> Stashed changes
         }
     }
 }
