@@ -9,25 +9,8 @@ namespace HR.Infrastructure.Seeders
         public static async Task Seed(RoleManager<Role> rolemanager)
         {
             var roleCount = await rolemanager.Roles.CountAsync();
-
-            await rolemanager.CreateAsync(new Role()
+            if (roleCount <= 0)
             {
-<<<<<<< Updated upstream
-                Name = "Manager",
-                NormalizedName = "MANAGER"
-            });
-            await rolemanager.CreateAsync(new Role()
-            {
-                Name = "User",
-                NormalizedName = "USER"
-            });
-            await rolemanager.CreateAsync(new Role()
-            {
-                Name = "Hr",
-                NormalizedName = "HR"
-            });
-
-=======
                 await rolemanager.CreateAsync(new Role()
                 {
                     Name = "Manager",
@@ -44,7 +27,6 @@ namespace HR.Infrastructure.Seeders
                     NormalizedName = "HR"
                 });
             }
->>>>>>> Stashed changes
         }
     }
 }

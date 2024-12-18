@@ -147,7 +147,7 @@ namespace HR.API.Controllers
         {
             if (ModelState.IsValid)
             {
-                string result = await employeeServices.RegisterUser(registerUserDTO);
+                var result = await employeeServices.DeleteUser(id);
                 return Ok(result);
             }
             else
