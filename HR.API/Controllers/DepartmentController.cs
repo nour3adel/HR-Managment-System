@@ -19,7 +19,7 @@ namespace HR.API.Controllers
         }
 
         #region Get All Departments
-        [Authorize(Roles = "User,Manager,Hr")]
+        [Authorize(Roles = "User,Manager,Admin")]
         [HttpGet("GetALL")]
         [SwaggerOperation(summary: "Get All Departments", OperationId = "GetAllDepartments")]
         public async Task<IActionResult> GetAllDepartments()
@@ -30,7 +30,7 @@ namespace HR.API.Controllers
         #endregion
 
         #region Get Department By ID
-        [Authorize(Roles = "User,Manager,Hr")]
+        [Authorize(Roles = "User,Manager,Admin")]
         [SwaggerOperation(summary: "Get Department By ID", OperationId = "GetDepartmentByID")]
 
         [HttpGet("{id}")]
